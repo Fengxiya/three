@@ -1,10 +1,10 @@
 import * as THREE from "three"
 
-// gui
+// 窗口自适应大小
 // 导入轨道控制器
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js"
 import gsap from "gsap"
-import * as dat from "dat.gui"
+
 // 1、创建场景
 const scene = new THREE.Scene()
 
@@ -104,52 +104,3 @@ window.addEventListener("resize", () => {
   // 设置渲染器的像素比
   renderer.setPixelRatio(window.devicePixelRatio)
 })
-
-// gui控制变量
-const gui = new dat.GUI()
-gui
-  .add(cube.position, "x")
-  .min(0)
-  .max(5)
-  .step(0.01)
-  .name("移动x轴")
-  .onChange((val) => {
-    console.log(val)
-  })
-  .onFinishChange((val) => {
-    console.log(val, "kk")
-  })
-
-// 修改颜色
-const params = {
-  color: "#aaaaaa",
-  fn: () => {
-    gsap.to(cube.position, {
-      x: 5,
-      duration: 5,
-      ease: "power1.in",
-      // 循环次数，如果是无限次循环就是-1，循环2次就写2
-      repeat: -1,
-      // 往返运动
-      yoyo: true,
-      // 延迟,秒数
-      delay: 2,
-      onComplete: () => {
-        console.log("动画完成")
-      },
-      onStart: () => {
-        console.log("动画开始")
-      },
-    })
-  },
-}
-gui.addColor(params, "color").onChange((val) => {
-  cube.material.color.set(val)
-})
-gui.add(cube, "visible").name("是否显示")
-
-// 添加按钮
-gui.add(params, "fn").name("立方体运动")
-
-let folder = gui.addFolder("设置立方体")
-folder.add(cube.material, "wireframe")

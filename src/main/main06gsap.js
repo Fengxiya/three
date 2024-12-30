@@ -1,10 +1,10 @@
 import * as THREE from "three"
 
-// gui
+// gsap
 // 导入轨道控制器
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js"
 import gsap from "gsap"
-import * as dat from "dat.gui"
+
 // 1、创建场景
 const scene = new THREE.Scene()
 
@@ -50,8 +50,7 @@ const axesHelper = new THREE.AxesHelper(5)
 scene.add(axesHelper)
 // 创建轨道控制器
 const controls = new OrbitControls(camera, renderer.domElement)
-// 设置控制器阻尼，让控制器更有真实效果
-controls.enableDamping = true
+
 const clock = new THREE.Clock()
 
 let animation1 = gsap.to(cube.position, {
@@ -73,83 +72,19 @@ let animation1 = gsap.to(cube.position, {
 })
 
 window.addEventListener("dblclick", () => {
-  // if (animation1.isActive()) {
-  //   animation1.pause() //暂停动画
-  // } else {
-  //   animation1.resume()
-  // }
-  const fullScreenElement = document.fullscreenElement
-  if (!fullScreenElement) {
-    renderer.domElement.requestFullscreen()
+  if (animation1.isActive()) {
+    animation1.pause() //暂停动画
   } else {
-    document.exitFullscreen()
+    animation1.resume()
   }
 })
 function render() {
-  controls.update()
+  // let time = clock.getElapsedTime() // 时钟运行总时长
+  // let deltaTime = clock.getDelta() //两次获取时间的间隔时间
+  // 上面这两个获取的都是秒数
+
   renderer.render(scene, camera)
   requestAnimationFrame(render)
 }
 
 render()
-
-// 窗口自适应
-window.addEventListener("resize", () => {
-  // 更新摄像头
-  camera.aspect = window.innerWidth / window.innerHeight
-  // 更新摄像机的投影矩阵
-  camera.updateProjectionMatrix()
-  // 更新渲染器
-  renderer.setSize(window.innerWidth, window.innerHeight)
-  // 设置渲染器的像素比
-  renderer.setPixelRatio(window.devicePixelRatio)
-})
-
-// gui控制变量
-const gui = new dat.GUI()
-gui
-  .add(cube.position, "x")
-  .min(0)
-  .max(5)
-  .step(0.01)
-  .name("移动x轴")
-  .onChange((val) => {
-    console.log(val)
-  })
-  .onFinishChange((val) => {
-    console.log(val, "kk")
-  })
-
-// 修改颜色
-const params = {
-  color: "#aaaaaa",
-  fn: () => {
-    gsap.to(cube.position, {
-      x: 5,
-      duration: 5,
-      ease: "power1.in",
-      // 循环次数，如果是无限次循环就是-1，循环2次就写2
-      repeat: -1,
-      // 往返运动
-      yoyo: true,
-      // 延迟,秒数
-      delay: 2,
-      onComplete: () => {
-        console.log("动画完成")
-      },
-      onStart: () => {
-        console.log("动画开始")
-      },
-    })
-  },
-}
-gui.addColor(params, "color").onChange((val) => {
-  cube.material.color.set(val)
-})
-gui.add(cube, "visible").name("是否显示")
-
-// 添加按钮
-gui.add(params, "fn").name("立方体运动")
-
-let folder = gui.addFolder("设置立方体")
-folder.add(cube.material, "wireframe")
