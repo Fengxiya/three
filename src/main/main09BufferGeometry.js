@@ -1,11 +1,10 @@
 import * as THREE from "three"
 
-// 打造酷炫三角形
+// gui
 // 导入轨道控制器
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js"
 import gsap from "gsap"
 import * as dat from "dat.gui"
-
 // 1、创建场景
 const scene = new THREE.Scene()
 
@@ -21,27 +20,20 @@ camera.position.set(0, 0, 10)
 // 添加相机
 scene.add(camera)
 
-// 导入纹理，实际上是图片加载器
-const textureLoader = new THREE.TextureLoader()
-// 这个放在dist文件夹下面
-const doorColorTexture = textureLoader.load("./imgs/doorColor.jpg")
-// 纹理偏移属性
-// doorColorTexture.offset.x=0.5
-// doorColorTexture.offset.y=0.5
-// doorColorTexture.offset.set(0.5, 0.5)
-// 设置中心点
-doorColorTexture.center.set(0.5, 0.5)
-// 纹理旋转
-doorColorTexture.rotation = Math.PI / 4
-const cubeGeometry = new THREE.BoxGeometry(1, 1, 1)
-// 材质
-const basicMaterial = new THREE.MeshBasicMaterial({
-  // color: "#ffff00",
-  map: doorColorTexture,
-})
-const cube = new THREE.Mesh(cubeGeometry, basicMaterial)
-scene.add(cube)
-
+// 添加物体
+// 创建几何体对象
+const geometry = new THREE.BufferGeometry()
+// 图形由三角形拼接而成，每个点都有xyz三个值
+// 所以想要组成一个正方形，是两个三角形，6个顶点，24个值
+const vertices = new Float32Array([
+  -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0, 1.0,
+  -1.0, -1.0, 1.0,
+])
+geometry.setAttribute("position", new THREE.BufferAttribute(vertices, 3))
+const material = new THREE.MeshBasicMaterial({ color: 0xffff00 })
+// 根据几何体和材质创建物体
+const mesh = new THREE.Mesh(geometry, material)
+scene.add(mesh)
 // 初始化渲染器
 const renderer = new THREE.WebGLRenderer()
 renderer.setSize(window.innerWidth, window.innerHeight)

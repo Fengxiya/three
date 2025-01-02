@@ -21,27 +21,14 @@ camera.position.set(0, 0, 10)
 // 添加相机
 scene.add(camera)
 
-// 导入纹理，实际上是图片加载器
-const textureLoader = new THREE.TextureLoader()
-// 这个放在dist文件夹下面
-const doorColorTexture = textureLoader.load("./imgs/doorColor.jpg")
-// 纹理偏移属性
-// doorColorTexture.offset.x=0.5
-// doorColorTexture.offset.y=0.5
-// doorColorTexture.offset.set(0.5, 0.5)
-// 设置中心点
-doorColorTexture.center.set(0.5, 0.5)
-// 纹理旋转
-doorColorTexture.rotation = Math.PI / 4
-const cubeGeometry = new THREE.BoxGeometry(1, 1, 1)
+// 添加物体
+const cubeGeometry = new THREE.BoxBufferGeometry(1, 1, 1)
 // 材质
 const basicMaterial = new THREE.MeshBasicMaterial({
-  // color: "#ffff00",
-  map: doorColorTexture,
+  color: "#ffff00",
 })
 const cube = new THREE.Mesh(cubeGeometry, basicMaterial)
 scene.add(cube)
-
 // 初始化渲染器
 const renderer = new THREE.WebGLRenderer()
 renderer.setSize(window.innerWidth, window.innerHeight)
