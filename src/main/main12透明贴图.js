@@ -27,8 +27,6 @@ const textureLoader = new THREE.TextureLoader()
 const doorColorTexture = textureLoader.load("./imgs/doorColor.jpg")
 // 透明纹理
 const doorAplhaTexture = textureLoader.load("./imgs/alpha.png")
-// 环境贴图，就是让图片更立体，有明有暗
-const doorAoTexture = textureLoader.load("./imgs/ao.png")
 const cubeGeometry = new THREE.BoxGeometry(1, 1, 1)
 // 材质
 const basicMaterial = new THREE.MeshBasicMaterial({
@@ -36,22 +34,15 @@ const basicMaterial = new THREE.MeshBasicMaterial({
   map: doorColorTexture,
   alphaMap: doorAplhaTexture, //设置透明的范围，黑色的全透明，白色是不透明，也可有灰色半透明
   transparent: true, //透明层起效果的开关
-  // aoMap: doorAoTexture, //白色的是显示原图，越黑显示的原图越不明显，全黑的地方就显示全黑，透明通道也是全黑
   // opacity: 0.4, //整体的透明度
   // side: THREE.FrontSide, //渲染前面，后面BackSide，前后两面BoubleSide
 })
 const cube = new THREE.Mesh(cubeGeometry, basicMaterial)
 scene.add(cube)
 
-const planeGeometry = new THREE.PlaneGeometry(1, 1)
-const plane = new THREE.Mesh(planeGeometry, basicMaterial)
+const plane = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), basicMaterial)
 plane.position.set(3, 0, 0)
 scene.add(plane)
-// 环境贴图需要设置第二组uv
-planeGeometry.setAttribute(
-  "uv2",
-  new THREE.BufferAttribute(planeGeometry.attributes.uv.array, 2)
-)
 // 初始化渲染器
 const renderer = new THREE.WebGLRenderer()
 renderer.setSize(window.innerWidth, window.innerHeight)
